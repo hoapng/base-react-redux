@@ -4,6 +4,8 @@ import Modal from 'react-bootstrap/Modal';
 import './ManageUser.scss'
 import { FcPlus } from 'react-icons/fc';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { postCreatNewUser } from '../../../services/apiService';
 
 const ModalCreateUser = (props) => {
     const { show, setShow } = props;
@@ -18,9 +20,37 @@ const ModalCreateUser = (props) => {
         setImage('')
     };
     // const handleShow = () => setShow(true);
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const handleSubmitCreateUser = async () => {
         //validate
+        const isValidEmail = validateEmail(email);
+        if (!isValidEmail) {
+            toast.error('Invalid email')
+            return;
+        }
 
+        if (!password) {
+            toast.error('Invalid password')
+            return;
+        }
+
+        // if (!username) {
+        //     toast.error('Invalid username')
+        //     return;
+        // }
+
+        // if (!role) {
+        //     toast.error('Invalid role')
+        //     return;
+        // }
         //call api
         // let data = {
         //     email: email,
@@ -32,15 +62,18 @@ const ModalCreateUser = (props) => {
 
         // console.log(data)
 
-        const data = new FormData();
-        data.append('email', email);
-        data.append('password', password);
-        data.append('username', username);
-        data.append('role', role);
-        data.append('userImage', image);
 
-        let res = await axios.post('http://localhost:8081/api/v1/participant', data)
-        console.log(res)
+
+        let data = await postCreatNewUser(email, password, username, role, image)
+        console.log(data);
+
+        if (data && data.EC === 0) {
+            toast.success(data.EM);
+            handleClose();
+        }
+        if (data && data.EC !== 0) {
+            toast.error(data.EM)
+        }
     }
 
     const [email, setEmail] = useState('');
@@ -48,7 +81,7 @@ const ModalCreateUser = (props) => {
     const [username, setUsername] = useState('');
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
-    const [role, setRole] = useState('USER');
+    const [role, setRole] = useState('');
 
     const handleUploadImage = (event) => {
         if (event.target && event.target.files && event.target.files[0]) {
@@ -107,6 +140,7 @@ const ModalCreateUser = (props) => {
                         <div className="col-md-4">
                             <label className="form-label">Role</label>
                             <select className="form-select" onChange={(event) => setRole(event.target.value)}>
+                                <option value="" disabled selected>Role</option>
                                 <option value='USER'>USER</option>
                                 <option value='ADMIN'>ADMIN</option>
                             </select>
