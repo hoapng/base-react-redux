@@ -9,7 +9,7 @@ const ManageUser = (props) => {
 
     const [showModalCreateUser, setShowModalCreateUser] = useState(false);
     const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
-
+    const [dataUpdate, setDataUpdate] = useState({})
     const [listUsers, setistUsers] = useState([])
 
     useEffect(() => {
@@ -25,9 +25,12 @@ const ManageUser = (props) => {
 
     const handleClickBtnUpdate = (user) => {
         setShowModalUpdateUser(true)
-        console.log(user)
+        // console.log('user update', user)
+        setDataUpdate(user)
 
     }
+
+    // console.log('check dataupdate', dataUpdate)
 
     return (
         <div className="manage-user-container">
@@ -53,7 +56,7 @@ const ManageUser = (props) => {
                 <ModalUpdateUser
                     show={showModalUpdateUser}
                     setShow={setShowModalUpdateUser}
-                    fetchListUsers={fetchListUsers}
+                    dataUpdate={dataUpdate}
 
                 />
             </div>

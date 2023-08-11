@@ -6,15 +6,37 @@ import { FcPlus } from 'react-icons/fc';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { postCreatNewUser } from '../../../services/apiService';
+import _ from 'lodash'
 
 const ModalUpdateUser = (props) => {
-    const { show, setShow, fetchListUsers } = props;
+    const { show, setShow, fetchListUsers, dataUpdate } = props;
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
+    const [role, setRole] = useState('USER');
+
+    useEffect(() => {
+        console.log('run useEffect', dataUpdate)
+        if (!_.isEmpty(dataUpdate)) {
+            //update state
+            setEmail(dataUpdate.email);
+            // setPassword(dataUpdate.password);
+            setRole(dataUpdate.role)
+            setUsername(dataUpdate.username);
+            if (dataUpdate.image) {
+                setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
+            }
+        }
+    }, [dataUpdate])
 
     const handleClose = () => {
         setShow(false);
         setEmail('');
         setPassword('');
-        setRole('');
+        setRole('USER');
         setUsername('');
         setPreviewImage('');
         setImage('')
@@ -77,13 +99,6 @@ const ModalUpdateUser = (props) => {
         }
     }
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [image, setImage] = useState('');
-    const [previewImage, setPreviewImage] = useState('');
-    const [role, setRole] = useState('');
-
     const handleUploadImage = (event) => {
         if (event.target && event.target.files && event.target.files[0]) {
             setPreviewImage(URL.createObjectURL(event.target.files[0]))
@@ -92,6 +107,8 @@ const ModalUpdateUser = (props) => {
             // setPreviewImage('')
         }
     }
+
+    console.log('check render: dataUpdate', dataUpdate)
 
     return (
         <>
@@ -117,6 +134,7 @@ const ModalUpdateUser = (props) => {
                                 type="email"
                                 className="form-control"
                                 value={email}
+                                disabled
                                 onChange={(event) => setEmail(event.target.value)}
                             />
                         </div>
@@ -126,6 +144,7 @@ const ModalUpdateUser = (props) => {
                                 type="password"
                                 className="form-control"
                                 value={password}
+                                disabled
                                 onChange={(event) => setPassword(event.target.value)}
                             />
                         </div>
@@ -140,8 +159,8 @@ const ModalUpdateUser = (props) => {
                         </div>
                         <div className="col-md-4">
                             <label className="form-label">Role</label>
-                            <select className="form-select" onChange={(event) => setRole(event.target.value)}>
-                                <option value="" disabled selected>Role</option>
+                            <select className="form-select" onChange={(event) => setRole(event.target.value)} value={role}>
+                                {/* <option value="" disabled selected>Role</option> */}
                                 <option value='USER'>USER</option>
                                 <option value='ADMIN'>ADMIN</option>
                             </select>

@@ -10,11 +10,18 @@ import { postCreatNewUser } from '../../../services/apiService';
 const ModalCreateUser = (props) => {
     const { show, setShow, fetchListUsers } = props;
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
+    const [role, setRole] = useState('USER');
+
     const handleClose = () => {
         setShow(false);
         setEmail('');
         setPassword('');
-        setRole('');
+        setRole('USER');
         setUsername('');
         setPreviewImage('');
         setImage('')
@@ -77,13 +84,6 @@ const ModalCreateUser = (props) => {
         }
     }
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [image, setImage] = useState('');
-    const [previewImage, setPreviewImage] = useState('');
-    const [role, setRole] = useState('');
-
     const handleUploadImage = (event) => {
         if (event.target && event.target.files && event.target.files[0]) {
             setPreviewImage(URL.createObjectURL(event.target.files[0]))
@@ -140,8 +140,7 @@ const ModalCreateUser = (props) => {
                         </div>
                         <div className="col-md-4">
                             <label className="form-label">Role</label>
-                            <select className="form-select" onChange={(event) => setRole(event.target.value)}>
-                                <option value="" disabled selected>Role</option>
+                            <select className="form-select" onChange={(event) => setRole(event.target.value)} value={role}>
                                 <option value='USER'>USER</option>
                                 <option value='ADMIN'>ADMIN</option>
                             </select>
