@@ -5,11 +5,11 @@ import './ManageUser.scss'
 import { FcPlus } from 'react-icons/fc';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { postCreatNewUser } from '../../../services/apiService';
+import { putUpdateUser } from '../../../services/apiService';
 import _ from 'lodash'
 
 const ModalUpdateUser = (props) => {
-    const { show, setShow, fetchListUsers, dataUpdate } = props;
+    const { show, setShow, fetchListUsers, dataUpdate, resetUpdateData } = props;
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +19,7 @@ const ModalUpdateUser = (props) => {
     const [role, setRole] = useState('USER');
 
     useEffect(() => {
-        console.log('run useEffect', dataUpdate)
+        // console.log('run useEffect', dataUpdate)
         if (!_.isEmpty(dataUpdate)) {
             //update state
             setEmail(dataUpdate.email);
@@ -40,6 +40,7 @@ const ModalUpdateUser = (props) => {
         setUsername('');
         setPreviewImage('');
         setImage('')
+        resetUpdateData()
     };
     // const handleShow = () => setShow(true);
 
@@ -59,34 +60,7 @@ const ModalUpdateUser = (props) => {
             return;
         }
 
-        if (!password) {
-            toast.error('Invalid password')
-            return;
-        }
-
-        // if (!username) {
-        //     toast.error('Invalid username')
-        //     return;
-        // }
-
-        // if (!role) {
-        //     toast.error('Invalid role')
-        //     return;
-        // }
-        //call api
-        // let data = {
-        //     email: email,
-        //     password: password,
-        //     username: username,
-        //     role: role,
-        //     userImage: image
-        // }
-
-        // console.log(data)
-
-
-
-        let data = await postCreatNewUser(email, password, username, role, image)
+        let data = await putUpdateUser(dataUpdate.id, username, role, image)
         // console.log(data);
 
         if (data && data.EC === 0) {
@@ -108,7 +82,7 @@ const ModalUpdateUser = (props) => {
         }
     }
 
-    console.log('check render: dataUpdate', dataUpdate)
+    // console.log('check render: dataUpdate', dataUpdate)
 
     return (
         <>
