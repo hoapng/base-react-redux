@@ -6,7 +6,7 @@ import { deleteUsers } from '../../../services/apiService';
 import axios from 'axios';
 
 const ModalDeleteUser = (props) => {
-    const { show, setShow, fetchListUsers, dataUpdate } = props;
+    const { show, setShow, fetchListUsers, dataUpdate, fetchListUsersWithPaginate, currentPage, setCurrentPage } = props;
 
     const handleClose = () => setShow(false);
     const handleSubmitDeleteUser = async () => {
@@ -16,7 +16,9 @@ const ModalDeleteUser = (props) => {
         if (data && data.EC === 0) {
             // toast.success(data.EM);
             handleClose();
-            await fetchListUsers()
+            // await fetchListUsers()
+            setCurrentPage(1)
+            await fetchListUsersWithPaginate(1)
         }
         if (data && data.EC !== 0) {
             toast.error(data.EM)
