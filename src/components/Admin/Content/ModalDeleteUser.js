@@ -14,7 +14,7 @@ const ModalDeleteUser = (props) => {
         // console.log(data);
 
         if (data && data.EC === 0) {
-            toast.success(data.EM);
+            // toast.success(data.EM);
             handleClose();
             await fetchListUsers()
         }
