@@ -75,7 +75,6 @@ const ModalUpdateUser = (props) => {
         }
     }
 
-
     const handleUploadImage = (event) => {
         if (event.target && event.target.files && event.target.files[0]) {
             setPreviewImage(URL.createObjectURL(event.target.files[0]))
