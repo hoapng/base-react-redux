@@ -1,41 +1,43 @@
-.login-container{
-    .header{
+.register-container {
+    .header {
         height: 45px;
         text-align: right;
         padding: 5px 100px 0 100px;
 
-        button{
+        button {
             padding: 3px 15px;
             margin-left: 15px;
             border-radius: 5px;
             background: #f9f9f9;
             border: 1px solid;
 
-            &:hover{
+            &:hover {
                 background-color: white;
             }
         }
     }
 
-    .title{
+    .title {
         font-size: 25px;
         padding: 20px 0;
         text-align: center;
     }
 
-    .welcome{
+    .welcome {
         font-size: 20px;
         padding: 10px 0;
         text-align: center;
     }
 
-    .content-form{
-        input{
-            margin-bottom: 15px;
+    .content-form {
+
+        input {
+            margin-bottom: 15px ;
             margin-top: 3px;
         }
 
-        button{
+        button {
+            width: 100%;
             width: 100%;
             height: 40px;
             border: none;
@@ -45,8 +47,19 @@
             background: black;
         }
 
-        .back{
+        .back {
             cursor: pointer;
+        }
+
+        .pass-group {
+            position: relative;
+
+            .icons-eye {
+                cursor: pointer;
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+            }
         }
     }
 }

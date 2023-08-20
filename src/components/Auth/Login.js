@@ -1,19 +1,55 @@
 import { useState } from 'react';
 import './Login.scss'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { postLogin } from '../../services/apiService';
 
 const Login = (props) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        alert('login')
+    const navigate = useNavigate();
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
+    const handleLogin = async () => {
+        //validate
+        const isValidEmail = validateEmail(email);
+        if (!isValidEmail) {
+            toast.error('Invalid email')
+            return;
+        }
+
+        if (!password) {
+            toast.error('Invalid password')
+            return;
+        }
+
+        //submit apis
+        let data = await postLogin(email, password)
+        // console.log(data);
+
+        if (data && data.EC === 0) {
+            toast.success(data.EM);
+            navigate('/')
+        }
+        if (data && data.EC !== 0) {
+            toast.error(data.EM)
+        }
     }
 
     return (
         <div className='login-container'>
             <div className='header'>
-                Don't have an account yet?
+                <span>Don't have an account yet?</span>
+                <button onClick={() => navigate('/register')}>Sign up</button>
             </div>
             <div className='title col-4 mx-auto'>
                 HoiDanIT
@@ -48,6 +84,9 @@ const Login = (props) => {
                     >
                         Login
                     </button>
+                </div>
+                <div className='text-center'>
+                    <span className='back' onClick={() => { navigate('/') }}>Go to HomePage</span>
                 </div>
             </div>
         </div>
