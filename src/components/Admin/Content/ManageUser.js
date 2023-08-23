@@ -38,7 +38,7 @@ const ManageUser = (props) => {
         let res = await getUsersWithPaginate(page, LIMIT_USER)
         // console.log(res)
         if (res.EC === 0) {
-            console.log('res.DT', res.DT)
+            // console.log('res.DT', res.DT)
             setistUsers(res.DT.users)
             setPageCount(res.DT.totalPages)
         }
