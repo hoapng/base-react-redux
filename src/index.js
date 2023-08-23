@@ -6,6 +6,7 @@ import store from './redux/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
+import 'nprogress/nprogress.css'
 // import App from './App';
 // import User from './components/User/User';
 // import Admin from './components/Admin/Admin';
