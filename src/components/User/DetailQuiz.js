@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { getDataQuiz } from "../../services/apiService"
+import _ from "lodash"
 
 const DetailQuiz = (props) => {
 
@@ -14,6 +15,29 @@ const DetailQuiz = (props) => {
     const fetchQuestions = async () => {
         let res = await getDataQuiz(quizId)
         console.log('>>> check question: ', res)
+        if (res && res.EC === 0) {
+            let raw = res.DT;
+            let data = _.chain(raw)
+                // Group the elements of Array based on `color` property
+                .groupBy("id")
+                // `key` is group's name (color), `value` is the array of objects
+                .map((value, key) => {
+                    // console.log('value', value, 'key', key)
+                    let answers = []
+                    let questionDescription, image = null;
+                    value.forEach((item, index) => {
+                        // console.log('item answers', item.answers)
+                        if (index === 0) {
+                            questionDescription = item.description;
+                            image = item.image
+                        }
+                        answers.push(item.answers)
+                    })
+                    return { questionID: key, answers, questionDescription, image }
+                })
+                .value()
+            console.log(data)
+        }
     }
 
     return (
