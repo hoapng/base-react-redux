@@ -17,7 +17,7 @@ const ManageUser = (props) => {
     const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
     const [dataUpdate, setDataUpdate] = useState({})
     const [showModalViewUser, setShowModalViewUser] = useState(false);
-    const [listUsers, setistUsers] = useState([])
+    const [listUsers, setListUsers] = useState([])
 
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1)
@@ -30,7 +30,7 @@ const ManageUser = (props) => {
         let res = await getAllUsers()
         // console.log(res)
         if (res.EC === 0) {
-            setistUsers(res.DT)
+            setListUsers(res.DT)
         }
     }
 
@@ -39,7 +39,7 @@ const ManageUser = (props) => {
         // console.log(res)
         if (res.EC === 0) {
             // console.log('res.DT', res.DT)
-            setistUsers(res.DT.users)
+            setListUsers(res.DT.users)
             setPageCount(res.DT.totalPages)
         }
     }

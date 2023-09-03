@@ -40,6 +40,7 @@ const DetailQuiz = (props) => {
                             questionDescription = item.description;
                             image = item.image
                         }
+                        item.answers.isSelected = false;
                         answers.push(item.answers)
                     })
                     return { questionID: key, answers, questionDescription, image }
@@ -61,6 +62,26 @@ const DetailQuiz = (props) => {
         if (dataQuiz && dataQuiz.length > index + 1) setIndex(index + 1)
     }
 
+    const handleCheckBox = (answersId, questionId) => {
+        let dataQuizClone = _.cloneDeep(dataQuiz);
+        let question = dataQuizClone.find(item => +item.questionId === +questionId)
+        if (question && question.answers) {
+            question.answers = question.answers.map(item => {
+                if (+item.id === +answersId) {
+                    item.isSelected = !item.isSelected;
+                }
+                return item
+            })
+            console.log(question.answers)
+        }
+
+        let index = dataQuizClone.findIndex(item => +item.questionId === +questionId)
+        if (index > -1) {
+            dataQuizClone[index] = question;
+            setDataQuiz(dataQuizClone)
+        }
+    }
+
     return (
         <div className="detail-quiz-container">
             <div className="left-content">
@@ -75,11 +96,13 @@ const DetailQuiz = (props) => {
                     <Question
                         index={index}
                         data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
+                        handleCheckBox={handleCheckBox}
                     />
                 </div>
                 <div className="footer">
                     <button className="btn btn-secondary" onClick={() => handlePrev()}>Prev</button>
                     <button className="btn btn-primary" onClick={() => handleNext()}>Next</button>
+                    <button className="btn btn-warning" onClick={() => handleNext()}>Finish</button>
                 </div>
             </div>
             <div className="right-content">
