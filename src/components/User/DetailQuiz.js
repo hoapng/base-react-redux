@@ -62,6 +62,32 @@ const DetailQuiz = (props) => {
         if (dataQuiz && dataQuiz.length > index + 1) setIndex(index + 1)
     }
 
+    const handleFinishQuiz = () => {
+        console.log("data before submit", dataQuiz)
+        let payload = {
+            quizId: +quizId,
+            answers: []
+        }
+        let answers = []
+        if (dataQuiz && dataQuiz.length > 0) {
+            dataQuiz.forEach(question => {
+                let questionId = question.questionId;
+                let userAnswerId = [];
+                question.answers.forEach(a => {
+                    if (a.isSelected === true) {
+                        userAnswerId.push(a.id)
+                    }
+                })
+                answers.push({
+                    questionId: +questionId,
+                    userAnswerId: userAnswerId
+                })
+            })
+            payload.answers = answers;
+            console.log("payload", payload)
+        }
+    }
+
     const handleCheckBox = (answersId, questionId) => {
         let dataQuizClone = _.cloneDeep(dataQuiz);
         let question = dataQuizClone.find(item => +item.questionId === +questionId)
@@ -103,7 +129,7 @@ const DetailQuiz = (props) => {
                 <div className="footer">
                     <button className="btn btn-secondary" onClick={() => handlePrev()}>Prev</button>
                     <button className="btn btn-primary" onClick={() => handleNext()}>Next</button>
-                    <button className="btn btn-warning" onClick={() => handleNext()}>Finish</button>
+                    <button className="btn btn-warning" onClick={() => handleFinishQuiz()}>Finish</button>
                 </div>
             </div>
             <div className="right-content">
