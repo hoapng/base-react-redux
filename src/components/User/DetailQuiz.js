@@ -23,7 +23,7 @@ const DetailQuiz = (props) => {
 
     const fetchQuestions = async () => {
         let res = await getDataQuiz(quizId)
-        console.log('>>> check question: ', res)
+        // console.log('>>> check question: ', res)
         if (res && res.EC === 0) {
             let raw = res.DT;
             let data = _.chain(raw)
@@ -43,15 +43,15 @@ const DetailQuiz = (props) => {
                         item.answers.isSelected = false;
                         answers.push(item.answers)
                     })
-                    return { questionID: key, answers, questionDescription, image }
+                    return { questionId: key, answers, questionDescription, image }
                 })
                 .value()
-            console.log(data)
+            // console.log(data)
             setDataQuiz(data)
         }
     }
 
-    console.log("dataQuiz", dataQuiz)
+    // console.log("dataQuiz", dataQuiz)
 
     const handlePrev = () => {
         if (index - 1 < 0) return;
@@ -66,13 +66,14 @@ const DetailQuiz = (props) => {
         let dataQuizClone = _.cloneDeep(dataQuiz);
         let question = dataQuizClone.find(item => +item.questionId === +questionId)
         if (question && question.answers) {
+            // console.log('>>> q: ', question)
             question.answers = question.answers.map(item => {
                 if (+item.id === +answersId) {
                     item.isSelected = !item.isSelected;
                 }
                 return item
             })
-            console.log(question.answers)
+            // console.log(question.answers)
         }
 
         let index = dataQuizClone.findIndex(item => +item.questionId === +questionId)
@@ -95,8 +96,8 @@ const DetailQuiz = (props) => {
                 <div className="q-content">
                     <Question
                         index={index}
-                        data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
                         handleCheckBox={handleCheckBox}
+                        data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
                     />
                 </div>
                 <div className="footer">
