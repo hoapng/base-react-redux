@@ -52,7 +52,12 @@ const getQuizByUser = () => {
 }
 
 const getDataQuiz = (id) => {
-    return axios.get(`http://localhost:8081/api/v1/questions-by-quiz?quizId=${id}`)
+    return axios.get(`api/v1/questions-by-quiz?quizId=${id}`)
+}
+
+const postSubmitQuiz = (data) => {
+    // console.log('data postSubmitQuiz', data)
+    return axios.post('api/v1/quiz-submit', { ...data })
 }
 
 export {
@@ -64,5 +69,6 @@ export {
     postLogin,
     postRegister,
     getQuizByUser,
-    getDataQuiz
+    getDataQuiz,
+    postSubmitQuiz
 }
