@@ -18,7 +18,7 @@ const ManageQuiz = (props) => {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [type, setType] = useState('')
-    const [image, setImage] = useState(null)
+    const [image, setImage] = useState('')
 
     const handleChangeFile = (event) => {
         // console.log(event.target.files)
@@ -40,7 +40,7 @@ const ManageQuiz = (props) => {
             toast.success(res.EM)
             setName('')
             setDescription('')
-            setImage(null)
+            setImage('')
         } else {
             toast.error(res.EM)
         }
