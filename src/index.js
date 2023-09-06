@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import 'nprogress/nprogress.css'
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 // import App from './App';
 // import User from './components/User/User';
 // import Admin from './components/Admin/Admin';
