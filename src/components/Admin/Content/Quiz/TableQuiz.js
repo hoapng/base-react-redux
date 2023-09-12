@@ -15,6 +15,7 @@ const TableQuiz = (props) => {
     }, [])
 
     const fetchQuiz = async () => {
+        setDataUpdate({})
         let res = await getAllQuizForAdmin()
         if (res && res.EC === 0) {
             setListQuiz(res.DT)

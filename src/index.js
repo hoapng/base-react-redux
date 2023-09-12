@@ -9,35 +9,13 @@ import Layout from './Layout';
 import 'nprogress/nprogress.css'
 import { PersistGate } from 'redux-persist/integration/react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-// import App from './App';
-// import User from './components/User/User';
-// import Admin from './components/Admin/Admin';
-// import HomePage from './components/Home/HomePage';
-// import Dashboard from './components/Admin/Content/Dashboard';
-// import ManageUser from './components/Admin/Content/ManageUser';
-// import Login from './components/Auth/Login';
+import "react-awesome-lightbox/build/style.css"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      {/* <React.StrictMode>
-      <App />
-    </React.StrictMode> */}
       <BrowserRouter>
-        {/* <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
-          <Route path="users" element={<User />} />
-        </Route>
-
-        <Route path="admins" element={<Admin />}>
-          <Route index element={<Dashboard />} />
-          <Route path="manage-users" element={<ManageUser />} />
-        </Route>
-
-        <Route path="login" element={<Login />} />
-      </Routes> */}
         <Layout />
       </BrowserRouter>
     </PersistGate>
