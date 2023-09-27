@@ -46,26 +46,6 @@ const QuizQA = (props) => {
   }, []);
 
   useEffect(() => {
-    const fetchQuizWithQA = async () => {
-      let rs = await getQuizWithQA(selectedQuiz.value);
-      if (rs && rs.EC === 0) {
-        //convert base64
-        let newQA = [];
-        for (let i = 0; i < rs.DT.qa.length; i++) {
-          let q = rs.DT.qa[i];
-          if (q.imageFile) {
-            q.imageFile = `Question-${q.id}.png`;
-            q.imageFile = await urltoFile(
-              `data:image/png;base64,${q.imageFile}`,
-              `Question-${q.id}.png`,
-              "image/png"
-            );
-          }
-          newQA.push(q);
-        }
-        setQuestions(newQA);
-      }
-    };
     if (selectedQuiz && selectedQuiz.value) {
       fetchQuizWithQA();
     }
@@ -81,6 +61,26 @@ const QuizQA = (props) => {
         return new File([buf], filename, { type: mimeType });
       });
   }
+  const fetchQuizWithQA = async () => {
+    let rs = await getQuizWithQA(selectedQuiz.value);
+    if (rs && rs.EC === 0) {
+      //convert base64
+      let newQA = [];
+      for (let i = 0; i < rs.DT.qa.length; i++) {
+        let q = rs.DT.qa[i];
+        if (q.imageFile) {
+          q.imageName = `Question-${q.id}.png`;
+          q.imageFile = await urltoFile(
+            `data:image/png;base64,${q.imageFile}`,
+            `Question-${q.id}.png`,
+            "image/png"
+          );
+        }
+        newQA.push(q);
+      }
+      setQuestions(newQA);
+    }
+  };
 
   const fetchQuiz = async () => {
     let res = await getAllQuizForAdmin();
