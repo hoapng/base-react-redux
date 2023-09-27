@@ -1,20 +1,25 @@
 body {
   overflow: hidden;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (min-width: 1500px){
-  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+@media (min-width: 1500px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
     max-width: 1350px;
   }
 }
 .app-container {
-  .header-container{
+  .header-container {
     .btn-login {
       border-radius: 5px;
       margin-right: 15px;
@@ -22,7 +27,7 @@ body {
       border: 1px solid black;
       height: 40px;
 
-      &:hover{
+      &:hover {
         background-color: #dddddd;
       }
     }
@@ -35,7 +40,7 @@ body {
       color: white;
       height: 40px;
 
-      &:hover{
+      &:hover {
         background-color: #222222;
       }
     }
@@ -43,17 +48,17 @@ body {
     .navbar {
       padding-top: 20px;
       z-index: 10;
-      background-color: rgba(0,0,0,0) !important;
+      background-color: rgba(0, 0, 0, 0) !important;
 
-      .nav-link{
-        &.active{
+      .nav-link {
+        &.active {
           color: #00bfff;
         }
       }
     }
   }
-  .homepage-container{
-    .homepage-content{
+  .homepage-container {
+    .homepage-content {
       padding: 100px;
       width: 50%;
       position: relative;
@@ -61,17 +66,17 @@ body {
       flex-direction: column;
       gap: 30px;
 
-      .title-1{
+      .title-1 {
         font-size: 35px;
         font-weight: 600;
       }
 
-      .title-2{
+      .title-2 {
         font-size: 20px;
       }
 
-      .title-3{
-        button{
+      .title-3 {
+        button {
           border-radius: 5px;
           margin-right: 15px;
           padding: 0 15px;
@@ -80,16 +85,20 @@ body {
           border: none;
           height: 40px;
 
-          &:hover{
+          &:hover {
             background-color: #222222;
           }
         }
       }
     }
   }
+
+  .app-content {
+    height: calc(100vh - 60px);
+  }
 }
 
-video{
+video {
   position: fixed;
   bottom: 0;
 
