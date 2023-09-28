@@ -12,6 +12,7 @@ import {
   getQuizWithQA,
   postCreatNewAnswerForQuestion,
   postCreatNewQuestionForQuiz,
+  postUpsertQA,
 } from "../../../../services/apiService";
 import { toast } from "react-toastify";
 
@@ -250,24 +251,34 @@ const QuizQA = (props) => {
     //         )
     //     }))
     // }))
+    let questionsCLone = _.cloneDeep(questions);
 
-    for (const question of questions) {
-      const q = await postCreatNewQuestionForQuiz(
-        +selectedQuiz.value,
-        question.description,
-        question.imageFile
-      );
-      for (const answer of question.answers) {
-        await postCreatNewAnswerForQuestion(
-          answer.description,
-          answer.isCorrect,
-          q.DT.id
+    for (let i = 0; i < questions.length; i++) {
+      if (questionsCLone[i].imageFile) {
+        questionsCLone[i].imageFile = await toBase64(
+          questionsCLone[i].imageFile
         );
       }
     }
-    toast.success(`Success`);
-    setQuestions(initQuestions);
+
+    let res = await postUpsertQA({
+      quizId: selectedQuiz.value,
+      questions: questionsCLone,
+    });
+
+    if (res && res === 0) {
+      toast.success(res.EM);
+      fetchQuizWithQA();
+    }
   };
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
 
   const handlePreviewImage = (questionId) => {
     let questionsCLone = _.cloneDeep(questions);
