@@ -5,7 +5,7 @@ import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
 import ModalResult from "./ModalResult";
-import RightContent from "./RightContent";
+import RightContent from "./Content/RightContent";
 
 const DetailQuiz = (props) => {
   const params = useParams();
@@ -164,7 +164,7 @@ const DetailQuiz = (props) => {
         </div>
       </div>
       <div className="right-content">
-        <RightContent dataQuiz={dataQuiz} />
+        <RightContent dataQuiz={dataQuiz} handleFinishQuiz={handleFinishQuiz} />
       </div>
 
       <ModalResult
