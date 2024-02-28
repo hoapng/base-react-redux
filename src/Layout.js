@@ -14,6 +14,7 @@ import DetailQuiz from "./components/User/DetailQuiz";
 import ManageQuiz from "./components/Admin/Content/Quiz/ManageQuiz";
 import Question from "./components/Admin/Content/Question/Question";
 import PrivteRoute from "./routes/PrivateRoute";
+import { Suspense } from "react";
 
 const NotFound = () => {
   return <div className="alert alert-danger mt-3 container">404 Not Found</div>;
@@ -22,54 +23,56 @@ const NotFound = () => {
 const Layout = (props) => {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<HomePage />} />
+            <Route
+              path="users"
+              element={
+                <PrivteRoute>
+                  <ListQuiz />
+                </PrivteRoute>
+              }
+            />
+          </Route>
+
+          <Route path="/quiz/:id" element={<DetailQuiz />} />
+
           <Route
-            path="users"
+            path="admins"
             element={
               <PrivteRoute>
-                <ListQuiz />
+                <Admin />
               </PrivteRoute>
             }
-          />
-        </Route>
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="manage-users" element={<ManageUser />} />
+            <Route path="manage-quizzes" element={<ManageQuiz />} />
+            <Route path="manage-questions" element={<Question />} />
+          </Route>
 
-        <Route path="/quiz/:id" element={<DetailQuiz />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
 
-        <Route
-          path="admins"
-          element={
-            <PrivteRoute>
-              <Admin />
-            </PrivteRoute>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="manage-users" element={<ManageUser />} />
-          <Route path="manage-quizzes" element={<ManageQuiz />} />
-          <Route path="manage-questions" element={<Question />} />
-        </Route>
-
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      {/* Same as */}
-      {/* <ToastContainer /> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        {/* <ToastContainer /> */}
+      </Suspense>
     </>
   );
 };
