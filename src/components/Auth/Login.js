@@ -6,6 +6,7 @@ import { postLogin } from "../../services/apiService";
 import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userActons";
 import { ImSpinner8 } from "react-icons/im";
+import Language from "../Header/Language";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const Login = (props) => {
       <div className="header">
         <span>Don't have an account yet?</span>
         <button onClick={() => navigate("/register")}>Sign up</button>
+        <Language />
       </div>
       <div className="title col-4 mx-auto">HoiDanIT</div>
       <div className="welcome col-4 mx-auto">Hello, who’s this?</div>
