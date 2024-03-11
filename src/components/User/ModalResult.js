@@ -1,43 +1,44 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { useTranslation } from "react-i18next";
 
 const ModalResult = (props) => {
-    const { show, setShow, dataModalResult } = props;
+  const { show, setShow, dataModalResult, handleShowAnswer } = props;
+  const handleClose = () => setShow(false);
+  const { t } = useTranslation();
 
-    const handleClose = () => {
-        setShow(false);
-    };
+  return (
+    <>
+      <Modal show={show} onHide={handleClose} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>{t("quiz.result")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            {t("quiz.total-question")}: <b>{dataModalResult.countTotal} </b>
+          </div>
+          <div>
+            {t("quiz.total-correct")}: <b>{dataModalResult.countCorrect} </b>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              handleClose();
+              props.handleShowAnswer();
+            }}
+          >
+            {t("quiz.show-answer")}
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            {t("quiz.close")}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
 
-    // console.log('check dataModalResult: ', dataModalResult)
-
-    return (
-        <>
-            <Modal
-                show={show}
-                onHide={handleClose}
-                size='xl'
-                backdrop='static'
-                className='modal-add-user'
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Result</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>Total Question: {dataModalResult.countTotal}</div>
-                    <div>Total Correct: {dataModalResult.countCorrect}</div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Show answers
-                    </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        Save
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
-}
-
-export default ModalResult
+export default ModalResult;

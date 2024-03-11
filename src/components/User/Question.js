@@ -1,19 +1,21 @@
 import _ from "lodash";
 import { useState } from "react";
 import Lightbox from "react-awesome-lightbox";
+import { useTranslation } from "react-i18next";
+import { IoIosClose, IoIosCheckmark } from "react-icons/io";
 
 const Question = (props) => {
-  const { data, index, handleCheckBox } = props;
-
+  const { t } = useTranslation();
+  const { data, index, isShowAnswer } = props;
   const [isPreviewImage, setIsPreviewImage] = useState(false);
 
-  if (_.isEmpty(data)) return <></>;
+  if (_.isEmpty(data)) {
+    return <></>;
+  }
 
-  const handleHandleCheckBox = (event, aId, qId) => {
-    // console.log("check: ", event.target.checked)
-    // console.log("data props: ", data)
-    // console.log("aId: ", aId, "qId: ", qId)
-    handleCheckBox(aId, qId);
+  const handleHanleCheckbox = (event, aId, qId) => {
+    // console.log('check: ', event.target.checked)
+    props.handleCheckbox(aId, qId);
   };
 
   return (
@@ -23,11 +25,11 @@ const Question = (props) => {
           <img
             style={{ cursor: "pointer" }}
             onClick={() => setIsPreviewImage(true)}
-            src={`data:image/png;base64,${data.image}`}
+            src={`data:image/jpeg;base64,${data.image}`}
           />
           {isPreviewImage === true && (
             <Lightbox
-              image={`data:image/png;base64,${data.image}`}
+              image={`data:image/jpeg;base64,${data.image}`}
               title={"Question Image"}
               onClose={() => setIsPreviewImage(false)}
             ></Lightbox>
@@ -37,24 +39,42 @@ const Question = (props) => {
         <div className="q-image"></div>
       )}
       <div className="question">
-        Question {index + 1}: {data.questionDescription}
+        {t("quiz.question")} {index + 1}: {data.questionDescription} ?
       </div>
       <div className="answer">
         {data.answers &&
           data.answers.length &&
-          data.answers.map((a, index) => {
+          data.answers.map((a, i) => {
             return (
-              <div key={`answers-${index}`} className="a-child">
+              <div key={`answer-${i}`} className="a-child">
                 <div className="form-check">
                   <input
+                    id={`checkbox-${i}-${index}`}
                     className="form-check-input"
                     type="checkbox"
                     checked={a.isSelected}
+                    disabled={props.isSubmitQuiz}
                     onChange={(event) =>
-                      handleHandleCheckBox(event, a.id, data.questionId)
+                      handleHanleCheckbox(event, a.id, data.questionId)
                     }
                   />
-                  <label className="form-check-label">{a.description}</label>
+                  <label
+                    className="form-check-label"
+                    htmlFor={`checkbox-${i}-${index}`}
+                  >
+                    {a.description}
+                  </label>
+                  {isShowAnswer === true && (
+                    <>
+                      {a.isSelected === true && a.isCorrect === false && (
+                        <IoIosClose className="incorrect" />
+                      )}
+
+                      {a.isCorrect === true && (
+                        <IoIosCheckmark className="correct" />
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             );
@@ -63,4 +83,5 @@ const Question = (props) => {
     </>
   );
 };
+
 export default Question;
