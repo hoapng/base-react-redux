@@ -1,5 +1,6 @@
 export const FETCH_USER_LOGIN_SUCESS = "FETCH_USER_LOGIN_SUCESS";
 export const USER_LOGOUT_SUCESS = "USER_LOGOUT_SUCESS";
+export const USER_UPDATE_SUCESS = "USER_UPDATE_SUCESS";
 
 export const doLogin = (data) => {
   return {
@@ -11,5 +12,11 @@ export const doLogin = (data) => {
 export const doLogout = (data) => {
   return {
     type: USER_LOGOUT_SUCESS,
+  };
+};
+
+export const doUpdate = (data) => {
+  return {
+    type: USER_UPDATE_SUCESS,
   };
 };

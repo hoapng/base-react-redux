@@ -159,3 +159,22 @@ export {
   logout,
   getOverView,
 };
+
+export const getHistory = () => {
+  return axios.get("api/v1/history");
+};
+
+export const updateProfile = (username, userImage) => {
+  //submit data
+  const data = new FormData();
+  data.append("username", username);
+  data.append("userImage", userImage);
+  return axios.post("api/v1/profile", data);
+};
+
+export const changePass = (current_password, new_password) => {
+  return axios.post("/api/v1/change-password", {
+    current_password,
+    new_password,
+  });
+};
