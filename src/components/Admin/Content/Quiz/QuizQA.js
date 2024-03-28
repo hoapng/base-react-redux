@@ -16,8 +16,26 @@ import {
 } from "../../../../services/apiService";
 import { toast } from "react-toastify";
 import { useImmer } from "use-immer";
+import { normalize, schema } from "normalizr";
 
 const QuizQA = (props) => {
+  const cauhoiId = uuidv4();
+  const dapAnId = uuidv4();
+
+  const [cauHoiObj, setCauHoiObj] = useState({
+    [cauhoiId]: {
+      id: cauhoiId,
+      description: "",
+      imageFile: "",
+      imageName: "",
+      answers: [dapAnId],
+    },
+  });
+
+  const [dapAnObj, setDapAnObj] = useState({
+    [dapAnId]: { id: dapAnId, description: "", isCorrect: false },
+  });
+
   const initQuestions = [
     {
       id: uuidv4(),
@@ -79,8 +97,18 @@ const QuizQA = (props) => {
           );
         }
         newQA.push(q);
+        // }
+        // setQuestions(newQA);
+
+        const answer = new schema.Entity("answer");
+        const question = new schema.Entity("question", {
+          answers: [answer],
+        });
+        const d = normalize(newQA, [question]);
+        console.log(">>>check data", d);
+        setCauHoiObj(d.entities.question);
+        setDapAnObj(d.entities.answer);
       }
-      setQuestions(newQA);
     }
   };
 
@@ -293,6 +321,12 @@ const QuizQA = (props) => {
   };
 
   // console.log("questions", questions)
+
+  console.log(">>>check cau hoi:", cauHoiObj);
+
+  const tifOptions = Object.keys(cauHoiObj).map((key, index) => {
+    console.log(">>>check object: ", key, "value: ", cauHoiObj[key]);
+  });
   return (
     <div className="questions-container">
       <div className="add-new-question">
@@ -305,129 +339,127 @@ const QuizQA = (props) => {
           />
         </div>
         <div className="mt-3 mb-2">Add question:</div>
-        {questions &&
-          questions.length > 0 &&
-          questions.map((question, index) => {
-            return (
-              <div className="q-main mb-4" key={question.id}>
-                <div className="questions-content">
-                  <div className="form-floating description">
-                    <input
-                      type="type"
-                      className="form-control"
-                      value={question.description}
-                      onChange={(event) =>
-                        handleOnChange(
-                          "QUESTION",
-                          question.id,
-                          event.target.value
-                        )
-                      }
-                    ></input>
-                    <label>Question {index + 1} Description</label>
-                  </div>
-                  <div className="group-upload">
-                    <label htmlFor={`${question.id}`}>
-                      <BiImageAdd className="label-up"></BiImageAdd>
-                    </label>
-                    <input
-                      id={`${question.id}`}
-                      onChange={(event) =>
-                        handleOnChangeFileQuestion(question.id, event)
-                      }
-                      type={"file"}
-                      hidden
-                    ></input>
-                    <span>
-                      {question.imageName ? (
-                        <span
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handlePreviewImage(question.id)}
-                        >
-                          {question.imageName}
-                        </span>
-                      ) : (
-                        "No file"
-                      )}
-                    </span>
-                  </div>
-                  <div className="btn-add">
-                    <span onClick={() => handleAddRemoveQuestion("ADD", "")}>
-                      <GrAddCircle className="icon-add" />
-                    </span>
-                    {questions.length > 1 && (
-                      <span
-                        onClick={() =>
-                          handleAddRemoveQuestion("REMOVE", question.id)
-                        }
-                      >
-                        <HiMinusCircle className="icon-remove" />
-                      </span>
-                    )}
-                  </div>
+        {Object.keys(cauHoiObj).map((keyQ, index) => {
+          return (
+            <div className="q-main mb-4" key={keyQ}>
+              <div className="questions-content">
+                <div className="form-floating description">
+                  <input
+                    type="type"
+                    className="form-control"
+                    value={cauHoiObj[keyQ].description}
+                    onChange={(event) =>
+                      handleOnChange(
+                        "QUESTION",
+                        cauHoiObj[keyQ].id,
+                        event.target.value
+                      )
+                    }
+                  ></input>
+                  <label>Question {index + 1} Description</label>
                 </div>
-                {question.answers &&
-                  question.answers.length > 0 &&
-                  question.answers.map((answer, index) => {
-                    return (
-                      <div key={answer.id} className="answers-content">
+                <div className="group-upload">
+                  <label htmlFor={`${cauHoiObj[keyQ].id}`}>
+                    <BiImageAdd className="label-up"></BiImageAdd>
+                  </label>
+                  <input
+                    id={`${cauHoiObj[keyQ].id}`}
+                    onChange={(event) =>
+                      handleOnChangeFileQuestion(cauHoiObj[keyQ].id, event)
+                    }
+                    type={"file"}
+                    hidden
+                  ></input>
+                  <span>
+                    {cauHoiObj[keyQ].imageName ? (
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handlePreviewImage(cauHoiObj[keyQ].id)}
+                      >
+                        {cauHoiObj[keyQ].imageName}
+                      </span>
+                    ) : (
+                      "No file"
+                    )}
+                  </span>
+                </div>
+                <div className="btn-add">
+                  <span onClick={() => handleAddRemoveQuestion("ADD", "")}>
+                    <GrAddCircle className="icon-add" />
+                  </span>
+                  {questions.length > 1 && (
+                    <span
+                      onClick={() =>
+                        handleAddRemoveQuestion("REMOVE", cauHoiObj[keyQ].id)
+                      }
+                    >
+                      <HiMinusCircle className="icon-remove" />
+                    </span>
+                  )}
+                </div>
+              </div>
+              {cauHoiObj[keyQ].answers &&
+                cauHoiObj[keyQ].answers.length > 0 &&
+                cauHoiObj[keyQ].answers.map((keyA, index) => {
+                  return (
+                    <div key={keyA} className="answers-content">
+                      <input
+                        className="form-check-input iscorrect"
+                        type="checkbox"
+                        checked={dapAnObj[keyA].isCorrect}
+                        onChange={(event) =>
+                          handleAnswerQuestion(
+                            "CHECKBOX",
+                            dapAnObj[keyA].id,
+                            cauHoiObj[keyQ].id,
+                            event.target.checked
+                          )
+                        }
+                      />
+                      <div className="form-floating description">
                         <input
-                          className="form-check-input iscorrect"
-                          type="checkbox"
-                          checked={answer.isCorrect}
+                          type="type"
+                          className="form-control"
+                          value={dapAnObj[keyA].description}
                           onChange={(event) =>
                             handleAnswerQuestion(
-                              "CHECKBOX",
-                              answer.id,
-                              question.id,
-                              event.target.checked
+                              "INPUT",
+                              dapAnObj[keyA].id,
+                              cauHoiObj[keyQ].id,
+                              event.target.value
                             )
                           }
-                        />
-                        <div className="form-floating description">
-                          <input
-                            type="type"
-                            className="form-control"
-                            value={answer.description}
-                            onChange={(event) =>
-                              handleAnswerQuestion(
-                                "INPUT",
-                                answer.id,
-                                question.id,
-                                event.target.value
-                              )
-                            }
-                          ></input>
-                          <label>Answers {index + 1}</label>
-                        </div>
-                        <div className="btn-group">
+                        ></input>
+                        <label>Answers {index + 1}</label>
+                      </div>
+                      <div className="btn-group">
+                        <span
+                          onClick={() =>
+                            handleAddRemoveAnswer("ADD", cauHoiObj[keyQ].id)
+                          }
+                        >
+                          <GrAddCircle className="icon-add" />
+                        </span>
+                        {cauHoiObj[keyQ].answers.length > 1 && (
                           <span
                             onClick={() =>
-                              handleAddRemoveAnswer("ADD", question.id)
+                              handleAddRemoveAnswer(
+                                "REMOVE",
+                                cauHoiObj[keyQ].id,
+                                dapAnObj[keyA].id
+                              )
                             }
                           >
-                            <GrAddCircle className="icon-add" />
+                            <HiMinusCircle className="icon-remove" />
                           </span>
-                          {question.answers.length > 1 && (
-                            <span
-                              onClick={() =>
-                                handleAddRemoveAnswer(
-                                  "REMOVE",
-                                  question.id,
-                                  answer.id
-                                )
-                              }
-                            >
-                              <HiMinusCircle className="icon-remove" />
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
-                    );
-                  })}
-              </div>
-            );
-          })}
+                    </div>
+                  );
+                })}
+            </div>
+          );
+        })}
         {questions && questions.length > 0 && (
           <div>
             <button

@@ -14,6 +14,7 @@
     "immer": "9.0.15",
     "lodash": "4.17.21",
     "moment": "^2.30.1",
+    "normalizr": "3.6.2",
     "nprogress": "0.2.0",
     "react": "18.2.0",
     "react-awesome-lightbox": "1.8.1",
