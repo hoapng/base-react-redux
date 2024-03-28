@@ -15,6 +15,7 @@ import {
   postUpsertQA,
 } from "../../../../services/apiService";
 import { toast } from "react-toastify";
+import { useImmer } from "use-immer";
 
 const QuizQA = (props) => {
   const initQuestions = [
@@ -96,7 +97,7 @@ const QuizQA = (props) => {
     }
   };
 
-  const [questions, setQuestions] = useState(initQuestions);
+  const [questions, setQuestions] = useImmer(initQuestions);
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
@@ -116,65 +117,65 @@ const QuizQA = (props) => {
       setQuestions([...questions, newQuestion]);
     }
     if (type === "REMOVE") {
-      let questionsCLone = _.cloneDeep(questions);
-      questionsCLone = questionsCLone.filter((item) => item.id !== id);
-      setQuestions(questionsCLone);
+      let newQuestions = questions.filter((item) => item.id !== id);
+      setQuestions(newQuestions);
     }
   };
 
   const handleAddRemoveAnswer = (type, questionId, answerId) => {
-    let questionsCLone = _.cloneDeep(questions);
     if (type === "ADD") {
       const newAnswer = {
         id: uuidv4(),
         description: "",
         isCorrect: false,
       };
-      let index = questionsCLone.findIndex((item) => item.id === questionId);
-      questionsCLone[index].answers.push(newAnswer);
-      setQuestions(questionsCLone);
+
+      setQuestions((draft) => {
+        let index = draft.findIndex((item) => item.id === questionId);
+        draft[index].answers.push(newAnswer);
+      });
     }
     if (type === "REMOVE") {
-      let index = questionsCLone.findIndex((item) => item.id === questionId);
-      questionsCLone[index].answers = questionsCLone[index].answers.filter(
-        (item) => item.id !== answerId
-      );
-      setQuestions(questionsCLone);
+      setQuestions((draft) => {
+        let index = draft.findIndex((item) => item.id === questionId);
+        draft[index].answers = questions[index].answers.filter(
+          (item) => item.id !== answerId
+        );
+      });
     }
   };
 
   const handleOnChange = (type, questionId, value) => {
     if (type === "QUESTION") {
-      let questionsCLone = _.cloneDeep(questions);
-      let index = questionsCLone.findIndex((item) => item.id === questionId);
+      let index = questions.findIndex((item) => item.id === questionId);
       if (index > -1) {
-        questionsCLone[index].description = value;
-        setQuestions(questionsCLone);
+        setQuestions((draft) => {
+          draft[index].description = value;
+        });
       }
     }
   };
 
   const handleOnChangeFileQuestion = (questionId, event) => {
-    let questionsCLone = _.cloneDeep(questions);
-    let index = questionsCLone.findIndex((item) => item.id === questionId);
+    let index = questions.findIndex((item) => item.id === questionId);
     if (
       index > -1 &&
       event.target &&
       event.target.files &&
       event.target.files[0]
     ) {
-      questionsCLone[index].imageFile = event.target.files[0];
-      questionsCLone[index].imageName = event.target.files[0].name;
-      setQuestions(questionsCLone);
+      setQuestions((draft) => {
+        draft[index].imageFile = event.target.files[0];
+        draft[index].imageName = event.target.files[0].name;
+      });
     }
   };
 
   const handleAnswerQuestion = (type, answerId, questionId, value) => {
-    let questionsCLone = _.cloneDeep(questions);
-    let index = questionsCLone.findIndex((item) => item.id === questionId);
+    let index = questions.findIndex((item) => item.id === questionId);
     if (index > -1) {
-      questionsCLone[index].answers = questionsCLone[index].answers.map(
-        (answer) => {
+      setQuestions((draft) => {
+        draft[index].answers = draft[index].answers.map((answer) => {
           if (answer.id === answerId) {
             if (type === "CHECKBOX") {
               answer.isCorrect = value;
@@ -184,9 +185,8 @@ const QuizQA = (props) => {
             }
           }
           return answer;
-        }
-      );
-      setQuestions(questionsCLone);
+        });
+      });
     }
   };
 
