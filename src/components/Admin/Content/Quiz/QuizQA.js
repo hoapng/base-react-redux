@@ -22,7 +22,7 @@ const QuizQA = (props) => {
   const cauhoiId = uuidv4();
   const dapAnId = uuidv4();
 
-  const [cauHoiObj, setCauHoiObj] = useState({
+  const [cauHoiObj, setCauHoiObj] = useImmer({
     [cauhoiId]: {
       id: cauhoiId,
       description: "",
@@ -32,7 +32,7 @@ const QuizQA = (props) => {
     },
   });
 
-  const [dapAnObj, setDapAnObj] = useState({
+  const [dapAnObj, setDapAnObj] = useImmer({
     [dapAnId]: { id: dapAnId, description: "", isCorrect: false },
   });
 
@@ -129,24 +129,31 @@ const QuizQA = (props) => {
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
+      const cauhoiId = uuidv4();
+      const dapAnId = uuidv4();
       const newQuestion = {
-        id: uuidv4(),
+        id: cauhoiId,
         description: "",
         imageFile: "",
         imageName: "",
-        answers: [
-          {
-            id: uuidv4(),
-            description: "",
-            isCorrect: false,
-          },
-        ],
+        answers: [dapAnId],
       };
-      setQuestions([...questions, newQuestion]);
+      let newAnswer = {
+        id: dapAnId,
+        description: "",
+        isCorrect: false,
+      };
+      setCauHoiObj((draft) => {
+        draft[cauhoiId] = newQuestion;
+      });
+      setDapAnObj((draft) => {
+        draft[dapAnId] = newAnswer;
+      });
     }
     if (type === "REMOVE") {
-      let newQuestions = questions.filter((item) => item.id !== id);
-      setQuestions(newQuestions);
+      setCauHoiObj((draft) => {
+        delete draft[id];
+      });
     }
   };
 
@@ -175,26 +182,24 @@ const QuizQA = (props) => {
 
   const handleOnChange = (type, questionId, value) => {
     if (type === "QUESTION") {
-      let index = questions.findIndex((item) => item.id === questionId);
-      if (index > -1) {
-        setQuestions((draft) => {
-          draft[index].description = value;
+      if (cauHoiObj[questionId]) {
+        setCauHoiObj((draft) => {
+          draft[questionId].description = value;
         });
       }
     }
   };
 
   const handleOnChangeFileQuestion = (questionId, event) => {
-    let index = questions.findIndex((item) => item.id === questionId);
     if (
-      index > -1 &&
+      cauHoiObj[questionId] &&
       event.target &&
       event.target.files &&
       event.target.files[0]
     ) {
-      setQuestions((draft) => {
-        draft[index].imageFile = event.target.files[0];
-        draft[index].imageName = event.target.files[0].name;
+      setCauHoiObj((draft) => {
+        draft[questionId].imageFile = event.target.files[0];
+        draft[questionId].imageName = event.target.files[0].name;
       });
     }
   };
@@ -309,12 +314,10 @@ const QuizQA = (props) => {
     });
 
   const handlePreviewImage = (questionId) => {
-    let questionsCLone = _.cloneDeep(questions);
-    let index = questionsCLone.findIndex((item) => item.id === questionId);
-    if (index > -1) {
+    if (cauHoiObj[questionId]) {
       setDataImagePreview({
-        url: URL.createObjectURL(questionsCLone[index].imageFile),
-        title: questionsCLone[index].imageName,
+        url: URL.createObjectURL(cauHoiObj[questionId].imageFile),
+        title: cauHoiObj[questionId].imageName,
       });
       setIsPreviewImage(true);
     }
@@ -327,6 +330,7 @@ const QuizQA = (props) => {
   const tifOptions = Object.keys(cauHoiObj).map((key, index) => {
     console.log(">>>check object: ", key, "value: ", cauHoiObj[key]);
   });
+
   return (
     <div className="questions-container">
       <div className="add-new-question">
@@ -387,7 +391,7 @@ const QuizQA = (props) => {
                   <span onClick={() => handleAddRemoveQuestion("ADD", "")}>
                     <GrAddCircle className="icon-add" />
                   </span>
-                  {questions.length > 1 && (
+                  {Object.keys(cauHoiObj).length > 1 && (
                     <span
                       onClick={() =>
                         handleAddRemoveQuestion("REMOVE", cauHoiObj[keyQ].id)
